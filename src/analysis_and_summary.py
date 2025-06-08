@@ -139,7 +139,7 @@ def summarize_simulation_results_with_llm(
         logging.error(f"Error summarizing results with LLM: {e}")
         return "Failed to generate summary."
 
-# NEW FUNCTION: For final meta-summary of multiple runs
+# For final meta-summary of multiple runs
 def generate_final_summary_with_llm(problem_statement: str, 
                                     all_individual_summaries: list[dict],
                                     llm_for_summarization: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.7}) -> str:
