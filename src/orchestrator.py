@@ -25,7 +25,15 @@ logging.basicConfig(
 
 load_dotenv() # Ensure env variables are loaded for all modules
 
-def run_full_system_dynamics_analysis():
+def run_analysis(
+        problem_statement: str,
+        num_variations: int = 1,
+        output_directory: str = "output",
+        llm_for_generating_system_model: dict = {},
+        llm_for_generating_scenarios: dict = {},
+        llm_for_simulation_analysis: dict = {},
+        llm_for_summarization: dict = {}
+    ):
     """
     Main function to orchestrate the entire process:
     1. Get problem statement from user.
@@ -36,20 +44,21 @@ def run_full_system_dynamics_analysis():
     6. (NEW) Generate a final comprehensive summary if multiple variations were run.
     """
     print("--- System Dynamics Model Generation and Analysis ---")
-    problem_statement = input("Please enter the problem statement you want to analyze (e.g., 'What is the impact of Coca-Cola doubling their price?'):\n")
+    # Step 1: Get problem statement from user if not provided
+    if problem_statement is None:
+            print("Problem statement cannot be empty. Exiting.")
+            logging.error("Problem statement cannot be empty. Exiting.")
+            return
+    else:
+        print(f"Using provided problem statement: {problem_statement}")
 
-    try:
-        num_variations = int(input("Enter the number of parameter variations to generate (1 for base run only, >1 for scenario analysis): "))
+
         if num_variations < 1:
             print("Number of variations must be at least 1. Setting to 1.")
             num_variations = 1
-    except ValueError as e:
-        print("Invalid input for number of variations. Setting to 1.")
-        logging.error("Invalid input for number of variations", exc_info=e)
-        num_variations = 1
 
-    # Define the output directory
-    output_directory = "output"
+    # # Define the output directory
+    # output_directory = "output"
     
     # Create the output directory if it doesn't exist
     os.makedirs(output_directory, exist_ok=True) # exist_ok=True prevents error if directory already exists
@@ -73,7 +82,7 @@ def run_full_system_dynamics_analysis():
         f.write("## Base Model Configuration Generation\n\n")
         f.write("Generating base model configuration with LLM...\n\n")
 
-        base_model_config = generate_model_config_with_llm(problem_statement)
+        base_model_config = generate_model_config_with_llm(problem_statement, llm_for_generating_system_model)
 
         if base_model_config is None:
             print("Failed to generate a valid base model configuration. Exiting.")
@@ -105,7 +114,8 @@ def run_full_system_dynamics_analysis():
             additional_variations = generate_parameter_variations_with_llm(
                 base_model_config=base_model_config,
                 num_variations=(num_variations - 1),
-                problem_statement=problem_statement
+                problem_statement=problem_statement,
+                llm_for_generating_scenarios=llm_for_generating_scenarios
             )
 
             if not additional_variations:
@@ -169,7 +179,8 @@ def run_full_system_dynamics_analysis():
                     model_parameters=sim_system.parameters,
                     stock_names=stock_names,
                     component_units=sim_system.component_units,
-                    time_unit=time_unit
+                    time_unit=time_unit,
+                    llm_for_simulation_analysis=llm_for_simulation_analysis
                 )
                 print(f"\n--- AI Summary for Scenario {i+1}: {scenario_description} ---")
                 print(individual_summary_text)
@@ -204,7 +215,8 @@ def run_full_system_dynamics_analysis():
         if num_variations > 1 and len(all_individual_summaries) > 1: # Only run if more than one successful scenario
             final_summary = generate_final_summary_with_llm(
                 problem_statement,
-                all_individual_summaries
+                all_individual_summaries,
+                llm_for_summarization=llm_for_summarization
             )
             print("\n--- Final Comprehensive AI Summary of All Scenarios ---")
             print(final_summary)
@@ -219,7 +231,3 @@ def run_full_system_dynamics_analysis():
 
     print(f"\nAnalysis complete. Detailed simulation results written to: {output_filename}")
     print(f"Final comprehensive analysis written to: {output_final_filename}")
-
-
-if __name__ == "__main__":
-    run_full_system_dynamics_analysis()

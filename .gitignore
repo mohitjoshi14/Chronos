@@ -16,3 +16,4 @@ wheels/
 output/
 archive/
 logs/
+analysis_results/

@@ -4,11 +4,11 @@ import yaml
 import os
 import logging
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel, Field, ValidationError
-from src.utils import load_prompt_from_file
+from src.utils import load_prompt_from_file, select_llm_model
 
 # Configure logging
 os.makedirs('logs', exist_ok=True)
@@ -25,12 +25,13 @@ class ParameterVariationsOutput(BaseModel):
 def generate_parameter_variations_with_llm(
     base_model_config: dict,
     num_variations: int,
-    problem_statement: str
+    problem_statement: str,
+    llm_for_generating_scenarios: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.5}
 ) -> list[ParameterVariation]: # Updated return type hint for clarity
     """
     Uses an LLM to generate multiple logical variations of model parameters.
     """
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.5)
+    llm = select_llm_model(llm_for_generating_scenarios)
     raw_json_parser = StrOutputParser()
 
     base_parameters = base_model_config.get('parameters', {})

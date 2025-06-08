@@ -4,11 +4,11 @@ import yaml
 import os
 import logging
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
-from src.utils import load_prompt_from_file
+from src.utils import load_prompt_from_file, select_llm_model
 from typing import Optional
 
 # Load environment variables (like GOOGLE_API_KEY)
@@ -58,11 +58,12 @@ class ModelConfig(BaseModel):
     problem_description: str = Field(description="The original problem statement provided by the user.")
 
 
-def generate_model_config_with_llm(problem_statement: str) -> Optional[dict]:
+def generate_model_config_with_llm(problem_statement: str,
+                                   llm_for_generating_system_model: dict) -> Optional[dict]:
     """
-    Uses an LLM (Gemini) to generate a JSON model configuration based on a problem statement.
+    Generates a model configuration using an LLM based on the provided problem statement.
     """
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.2)
+    llm = select_llm_model(llm_for_generating_system_model)
     parser = JsonOutputParser(pydantic_object=ModelConfig)
 
     # Load the prompt messages from the YAML file

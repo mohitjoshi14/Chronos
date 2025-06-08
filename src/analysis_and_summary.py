@@ -4,11 +4,11 @@ import numpy as np
 import json
 import os
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 import logging
-from src.utils import load_prompt_from_file
+from src.utils import load_prompt_from_file, select_llm_model
 
 load_dotenv()
 
@@ -28,13 +28,14 @@ def summarize_simulation_results_with_llm(
     model_parameters: dict,
     stock_names: list,
     component_units: dict,
-    time_unit: str
+    time_unit: str,
+    llm_for_simulation_analysis: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.5}
 ) -> str:
     """
     Uses an LLM (Gemini) to summarize the simulation results in natural language.
     Includes initial/final stock states, parameters, and their units for a more informed summary.
     """
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.5)
+    llm = select_llm_model(llm_for_simulation_analysis)
 
     summary_data = {}
     if not simulation_results_df.empty:
@@ -139,11 +140,14 @@ def summarize_simulation_results_with_llm(
         return "Failed to generate summary."
 
 # NEW FUNCTION: For final meta-summary of multiple runs
-def generate_final_summary_with_llm(problem_statement: str, all_individual_summaries: list[dict]) -> str:
+def generate_final_summary_with_llm(problem_statement: str, 
+                                    all_individual_summaries: list[dict],
+                                    llm_for_summarization: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.7}) -> str:
     """
     Uses an LLM (Gemini) to synthesize a final summary from multiple individual simulation summaries.
     """
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.7) # Higher temperature for more creative synthesis
+    llm = select_llm_model(llm_for_summarization)
+    # llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.7) # Higher temperature for more creative synthesis
     parser = StrOutputParser()
 
     # Create a string representation of all summaries for the LLM

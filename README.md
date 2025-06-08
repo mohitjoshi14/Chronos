@@ -171,32 +171,35 @@ Enter the number of parameter variations to generate (1 for base run only, >1 fo
 ### Unveiling Destiny: Output
 
 Upon successful completion, the simulation results and AI-generated summaries will appear in your console.
-Additionally, magical output files will be saved in the `output/` directory:
+Additionally, magical output files will be saved in the `analysis_results/` directory:
 
   * `simulation_analysis_<timestamp>.md`: Contains the detailed simulation results for each scenario.
-  * `final_summary_<timestamp>.md`: Contains the comprehensive comparative summary across all scenarios (if you chose more than one variation).
-  * `logs/error_log_<timestamp>.log`: Contains detailed error logs if any issues occur during execution.
+  * `final_analysis_<timestamp>.md`: Contains the comprehensive comparative summary across all scenarios (if you chose more than one variation).
+
+Log files are saved in the `logs/` directory:
+
+  * `error_<timestamp>.log`: Contains detailed error logs if any issues occur during execution.
 
 ## 6\. The Grand Design: Project Structure
 
 ```
 .
-├── main.py                          # The master spell, orchestrating the whole process.
+├── example.py                       # Example script for running the magic simulation.
 ├── requirements.txt                 # List of required magical ingredients (Python dependencies).
 ├── .env                             # Your personal book of secrets (e.g., GOOGLE_API_KEY).
-├── output/                          # Where your visions of the future and summaries are stored.
+├── analysis_results/                # Where your visions of the future and summaries are stored.
 ├── logs/                            # The archive of any magical mishaps.
 ├── prompts/                         # YAML files containing the ancient texts for our LLM.
 │   ├── model_generation_prompt.yaml # Instructions for generating the initial model.
-│   └── parameter_variation_prompt.yaml # Instructions for creating alternate realities.
-│   ├── sim_analysis_prompt.yaml # Instructions for summarizing simulation results.
-│   ├──final_analysis_prompt.yaml # Instructions for summarizing multiple scenarios.
+│   ├── parameter_variation_prompt.yaml # Instructions for creating alternate realities.
+│   ├── sim_analysis_prompt.yaml     # Instructions for summarizing simulation results.
+│   └── final_sim_analysis_prompt.yaml # Instructions for summarizing multiple scenarios.
 └── src/                             # The core of the magical engine.
-    ├── __init__.py
+    ├── orchestrator.py              # The master spell, orchestrating the whole process.
     ├── simulation_core.py           # The beating heart: defines and runs the system dynamics model.
-    ├── model_generation.py          # LLM integration for conjuring model configurations.
-    ├── parameter_variation.py       # LLM integration for generating infinite timelines.
-    ├── analysis_and_summary.py      # LLM integration for summarizing your visions.
+    ├── model_generation.py          # AI-powered model generation for conjuring model configurations.
+    ├── parameter_variation.py       # AI-powered parameter variation for generating infinite timelines.
+    ├── analysis_and_summary.py      # AI-powered analysis and summary for summarizing your visions.
     └── utils.py                     # Handy magical helper functions.
 ```
 
@@ -217,7 +220,7 @@ The behavior of our LLMs is controlled by the mystical prompt files in the `prom
   * **`model_generation_prompt.yaml`**: This prompt instructs the LLM on how to create the initial system dynamics model JSON. It includes critical guidelines like naming conventions, formula syntax (e.g., `PARAMETER_NAME['value']`), and unit requirements.
   * **`parameter_variation_prompt.yaml`**: This prompt guides the LLM in generating plausible parameter variations for scenario analysis. It specifies the number of variations, which fields to change (only `value` of parameters), and the expected JSON output format.
   * **`sim_analysis_prompt.yaml`**: This prompt explains how to summarize each simulation analysis.
-  * **`final_analysis_prompt.yaml`**: This prompt explains how to summarize scenarios from all simulation result into one comprehensive analysis.
+  * **`final_sim_analysis_prompt.yaml`**: This prompt explains how to summarize scenarios from all simulation result into one comprehensive analysis.
 
 You can modify these YAML files to:
 
@@ -231,7 +234,7 @@ You can modify these YAML files to:
 The project includes comprehensive error handling and logging, designed to help you understand if your spell misfires.
 
   * Errors during model generation, formula evaluation, or LLM interactions are caught and reported to the console, much like Mordo warning of cosmic consequences.
-  * Detailed error messages, including `NameError` specifics (e.g., missing variables in formulas), are logged to `logs/error_log_<timestamp>.log`. This file is crucial for debugging issues related to the LLM's generated output, helping you correct your incantations.
+  * Detailed error messages, including `NameError` specifics (e.g., missing variables in formulas), are logged to `logs/error_<timestamp>.log`. This file is crucial for debugging issues related to the LLM's generated output, helping you correct your incantations.
 
 ## 10\. Future Dimensions: Enhancements
   * **Evals / Automated Tests:** Develop multiple test cases and test data for automated evaluations and end to end tests.
