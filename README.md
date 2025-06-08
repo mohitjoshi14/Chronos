@@ -1,8 +1,10 @@
 # Chronos: Doctor Strange's Guide to System Dynamics
 
-## Ever wished you could peek into the future, like Doctor Strange, and see how your decisions play out? Welcome to Chronos\! This project lets you do just that, but for complex systems. It's like having the Eye of Agamotto for your business, environmental, or social challenges.
+Ever wished you could peek into the future, like Doctor Strange, and see how your decisions play out? Welcome to Chronos\! This project lets you do just that, but for complex systems. It's like having the Eye of Agamotto for your business, environmental, or social challenges.
 
 We use the power of advanced AI (Large Language Models, or LLMs) to build, simulate, and analyze "System Dynamics" models. In plain terms, you tell our AI a problem, and it builds a mini-universe to show you how things might unfold over time, including "what-if" scenarios.
+
+Note: Currently the product is not production ready and can generate errors. Use at your own risk.
 
 ## Table of Contents
 
@@ -108,13 +110,6 @@ This type of analysis is incredibly powerful for understanding complex systems a
 
 ## 4\. Initiating the Mystical Arts: Getting Started
 
-### Ancient Texts Needed: Prerequisites
-
-Make sure you have these mystical tools installed:
-
-  * Python 3.9+
-  * `pip` (Python's package installer)
-
 ### Setting Up Your Sanctum: Installation
 
 1.  **Clone the repository:**
@@ -194,6 +189,8 @@ Additionally, magical output files will be saved in the `output/` directory:
 ├── prompts/                         # YAML files containing the ancient texts for our LLM.
 │   ├── model_generation_prompt.yaml # Instructions for generating the initial model.
 │   └── parameter_variation_prompt.yaml # Instructions for creating alternate realities.
+│   ├── sim_analysis_prompt.yaml # Instructions for summarizing simulation results.
+│   ├──final_analysis_prompt.yaml # Instructions for summarizing multiple scenarios.
 └── src/                             # The core of the magical engine.
     ├── __init__.py
     ├── simulation_core.py           # The beating heart: defines and runs the system dynamics model.
@@ -219,6 +216,8 @@ The behavior of our LLMs is controlled by the mystical prompt files in the `prom
 
   * **`model_generation_prompt.yaml`**: This prompt instructs the LLM on how to create the initial system dynamics model JSON. It includes critical guidelines like naming conventions, formula syntax (e.g., `PARAMETER_NAME['value']`), and unit requirements.
   * **`parameter_variation_prompt.yaml`**: This prompt guides the LLM in generating plausible parameter variations for scenario analysis. It specifies the number of variations, which fields to change (only `value` of parameters), and the expected JSON output format.
+  * **`sim_analysis_prompt.yaml`**: This prompt explains how to summarize each simulation analysis.
+  * **`final_analysis_prompt.yaml`**: This prompt explains how to summarize scenarios from all simulation result into one comprehensive analysis.
 
 You can modify these YAML files to:
 
@@ -226,10 +225,6 @@ You can modify these YAML files to:
   * Refine the types of parameter variations, perhaps focusing on "chaos magic" or "reality warping" scenarios.
   * Change naming conventions or other structural requirements.
   * Improve the natural language generation for summaries, making them sound more like pronouncements from the Eye of Agamotto.
-
-**Important Note on `model_generation_prompt.yaml`:**
-The prompt explicitly tells the LLM: `**When referencing parameters in formulas, access their value using bracket notation (e.g., 'PARAMETER_NAME['value']').**`
-The `src/simulation_core.py` is engineered to correctly handle this specific syntax, by passing the full parameter dictionary to the `eval_context`.
 
 ## 9\. Shielding from Chaos: Error Handling and Logging
 
@@ -239,13 +234,11 @@ The project includes comprehensive error handling and logging, designed to help 
   * Detailed error messages, including `NameError` specifics (e.g., missing variables in formulas), are logged to `logs/error_log_<timestamp>.log`. This file is crucial for debugging issues related to the LLM's generated output, helping you correct your incantations.
 
 ## 10\. Future Dimensions: Enhancements
-
-  * **Advanced Unit Checking:** Implement more rigorous unit consistency checks within formulas at runtime, ensuring your magical calculations are always sound.
-  * **Interactive Visualization:** Integrate a plotting library (e.g., Matplotlib, Plotly) to visualize simulation results directly, creating stunning visual representations of your future timelines.
-  * **Model Validation:** Add automated checks for common model inconsistencies (e.g., unconnected flows, undefined variables), preventing accidental paradoxes.
+  * **Evals / Automated Tests:** Develop multiple test cases and test data for automated evaluations and end to end tests.
   * **UI/Web Interface:** Develop a simple web interface for easier interaction and visualization, making Chronos accessible to all aspiring Sorcerers.
-  * **Support for other LLMs:** Extend compatibility to other LLM providers, opening up more magical avenues.
-  * **Sensitivity Analysis (Automated):** Beyond variations, provide tools for automated sensitivity analysis on selected parameters, revealing which "sliders" have the most profound impact on your reality.
+  * **Interactive Visualization:** Create stunning visual representations of your future timelines.
+  * **Model Validation:** Add automated checks for common model inconsistencies (e.g., unconnected flows, undefined variables) and incorrect formula generations, preventing accidental paradoxes.
+  * **Human-in-the-Loop:** Allow users to add/remove stocks, flows and auxiliaries interactively, and then run the simulation. Allow sharing of reports through various channels.
 
 ## 11\. Joining the Mystic Arts: Contributing
 

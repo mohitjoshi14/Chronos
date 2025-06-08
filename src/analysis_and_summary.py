@@ -8,6 +8,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 import logging
+from src.utils import load_prompt_from_file
 
 load_dotenv()
 
@@ -112,22 +113,17 @@ def summarize_simulation_results_with_llm(
         }
 
 
+    # Load the prompt messages from the YAML file
+    prompt_directory = 'prompts'
+    if not os.path.exists(prompt_directory):
+        raise FileNotFoundError(f"Prompt directory not found: {prompt_directory}")
+    prompt_file = os.path.join(prompt_directory, 'sim_analysis_prompt.yaml')
+    prompt_messages = load_prompt_from_file(prompt_file)
+
     prompt_template = ChatPromptTemplate.from_messages(
         [
-            ("system",
-             "You are an expert system dynamics analyst. Analyze the provided simulation data and context. "
-             "Summarize the key findings, trends, and impacts in clear, concise natural language. "
-             "Crucially, **incorporate the units of measurement** for all values (stocks, parameters, flows, auxiliaries, time) when discussing them. "
-             "Refer back to the original problem statement and explain how the simulation addresses it. "
-             "Highlight the most significant changes and implications, particularly focusing on how stock levels (like capital and product inventories) change over time and how parameters influenced these changes. "
-             "Consider initial states, final states, and overall trends. Focus on the core dynamics and value capture aspects."
-             "Present the summary in well-structured paragraphs, using bullet points for key data points if appropriate."
-            ),
-            ("human",
-             "Original Problem: {problem_statement}\n\n"
-             "Simulation Data Summary (including initial and final stock states, parameters, and trends, all with units):\n{summary_data}\n\n"
-             "Based on this, what are the key findings and implications?"
-            )
+            ("system", prompt_messages["system_message"]),
+            ("human", prompt_messages["human_message"])
         ]
     )
 
@@ -156,26 +152,17 @@ def generate_final_summary_with_llm(problem_statement: str, all_individual_summa
         summaries_str += f"--- Scenario {i+1}: {summary.get('scenario_description', 'No description')}\n"
         summaries_str += f"{summary['summary_text']}\n\n" # Assuming 'summary_text' holds the individual LLM summary
 
+    # Load the prompt messages from the YAML file
+    prompt_directory = 'prompts'
+    if not os.path.exists(prompt_directory):
+        raise FileNotFoundError(f"Prompt directory not found: {prompt_directory}")    
+    prompt_file = os.path.join(prompt_directory, 'final_sim_analysis_prompt.yaml')
+    prompt_messages = load_prompt_from_file(prompt_file)
+
     prompt_template = ChatPromptTemplate.from_messages(
         [
-            ("system",
-             "You are an expert in comparative analysis of system dynamics simulations. "
-             "Your task is to synthesize a comprehensive summary from multiple individual simulation summaries. "
-             "Each individual summary represents a scenario based on different parameter assumptions. "
-             "Analyze how varying initial conditions and parameters impacted the simulation outcomes. "
-             "Compare and contrast the scenarios, highlighting the most significant changes in stock levels, "
-             "trends of auxiliaries and flows, and overall implications. "
-             "Focus on insights relevant to the original problem statement. "
-             "Ensure you discuss the impact of the *specific parameter changes* for each scenario. "
-             "Retain units for all values mentioned in the summary. "
-             "Present the final summary in a well-structured report format with an introduction, "
-             "a comparison of scenarios, and a conclusion with key takeaways."
-            ),
-            ("human",
-             "Original Problem Statement: {problem_statement}\n\n"
-             "Individual Simulation Summaries:\n{summaries_str}\n\n"
-             "Please provide a final comprehensive summary and comparative analysis."
-            )
+            ("system", prompt_messages["system_message"]),
+            ("human", prompt_messages["human_message"])
         ]
     )
 
