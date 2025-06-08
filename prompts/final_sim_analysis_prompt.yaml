@@ -12,7 +12,7 @@ system_message: |
   Present the final summary in a well-structured report format with an introduction,
   a comparison of scenarios, and a conclusion with key takeaways.
   For large numbers, use billion (B), millions (M) or thousands (K) as appropriate.
-  While comparing numbers, highlight differences in percentage terms or bp (basis points) where relevant, along with absolute values.
+  While comparing numbers, highlight differences in percentage terms or bps (basis points) where relevant, along with absolute values.
 human_message: |
   Original Problem Statement: {problem_statement}
 

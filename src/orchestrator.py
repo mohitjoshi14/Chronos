@@ -33,7 +33,7 @@ def run_analysis(
         llm_for_generating_scenarios: dict = {},
         llm_for_simulation_analysis: dict = {},
         llm_for_summarization: dict = {}
-    ):
+    ) -> str:
     """
     Main function to orchestrate the entire process:
     1. Get problem statement from user.
@@ -231,3 +231,4 @@ def run_analysis(
 
     print(f"\nAnalysis complete. Detailed simulation results written to: {output_filename}")
     print(f"Final comprehensive analysis written to: {output_final_filename}")
+    return final_summary
