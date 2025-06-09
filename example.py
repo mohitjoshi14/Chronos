@@ -7,7 +7,7 @@ from src.orchestrator import run_analysis
 problem_description = """What is the impact of AI on job displacement?"""
 
 # Number of variations (simulations) to generate for the problem statement
-number_of_scenarios = 5
+number_of_scenarios = 2
 
 # LLM config to be used at various stages of the analysis
 llm_config_1 = {

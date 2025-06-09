@@ -14,6 +14,8 @@ from typing import Optional
 # Load environment variables (like GOOGLE_API_KEY)
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 # --- Pydantic Schemas for LLM Output ---
 
 class StockDefinition(BaseModel):
@@ -88,6 +90,6 @@ def generate_model_config_with_llm(problem_statement: str,
         print("\nLLM Model Configuration Generated Successfully.")
         return response
     except Exception as e:
-        logging.error(f"Error generating model config with LLM: {e}")
+        logger.error(f"Error generating model config with LLM: {e}")
         print(f"Error generating model config with LLM. Check logs/error.log for details.")
         return None

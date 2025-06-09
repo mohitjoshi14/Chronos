@@ -4,8 +4,8 @@ import numpy as np
 import logging
 import os
 
-# Ensure log directory exists
-os.makedirs('logs', exist_ok=True)
+# Do not configure logging here; use the root logger set up by orchestrator.py
+logger = logging.getLogger(__name__)
 
 class Stock:
     """Represents an accumulation in the system."""
@@ -20,7 +20,7 @@ class Stock:
         """Update the stock's value based on its net flows."""
         net_flow = sum(flow.rate for flow in self.inflows) - \
                    sum(flow.rate for flow in self.outflows)
-        self.value += net_flow * dt
+        self.value += net_flow * dt 
         self.value = max(0.0, self.value) # Ensure non-negative stock values
 
     def __repr__(self):
@@ -44,6 +44,7 @@ class Flow:
             self.rate = eval(self.formula, globals(), system_state)
             self.rate = max(0.0, self.rate) # Ensure non-negative flow rates
         except Exception as e:
+            logger.error(f"Error calculating flow '{self.name}' with formula '{self.formula}': {e}")
             raise ValueError(f"Error calculating flow '{self.name}' with formula '{self.formula}': {e}")
 
     def __repr__(self):
@@ -66,6 +67,7 @@ class Auxiliary:
         try:
             self.value = eval(self.formula, globals(), system_state)
         except Exception as e:
+            logger.error(f"Error calculating auxiliary '{self.name}' with formula '{self.formula}': {e}")
             raise ValueError(f"Error calculating auxiliary '{self.name}' with formula '{self.formula}': {e}")
 
     def __repr__(self):
@@ -77,11 +79,16 @@ class System:
     Model components are loaded from a structured dictionary (e.g., parsed JSON).
     """
     def __init__(self, model_config: dict):
+        # dt is the time step for the simulation
         self.dt = model_config.get('simulation_settings', {}).get('dt', {}).get('value', 1.0)
         self.dt_unit = model_config.get('simulation_settings', {}).get('dt', {}).get('unit', 'time_unit')
+        # time is the current simulation time
         self.time = 0.0
+        # history is a DataFrame to store simulation results
         self.history = pd.DataFrame()
+        # parameters are the model parameters, which can be used in formulas
         self.parameters = model_config.get('parameters', {})
+        #problem_description is a string describing the problem being modeled
         self.problem_description = model_config.get('problem_description', 'No description provided.')
 
         # Store units for later use
@@ -114,18 +121,21 @@ class System:
         flow_connections_config = model_config.get('flow_connections', [])
         for flow_name, stock_name, direction in flow_connections_config:
             if flow_name not in self.flows:
+                logger.error(f"Flow '{flow_name}' in connections config not found in defined flows.")
                 raise ValueError(f"Flow '{flow_name}' in connections config not found in defined flows.")
             if stock_name not in self.stocks:
+                logger.error(f"Stock '{stock_name}' in connections config not found in defined stocks.")
                 raise ValueError(f"Stock '{stock_name}' in connections config not found in defined stocks.")
 
             flow_obj = self.flows[flow_name]
-            stock_obj = self.stocks[stock_name]
+            stock_obj = self.stocks[stock_name] 
 
             if direction == 'inflow':
                 stock_obj.inflows.append(flow_obj)
             elif direction == 'outflow':
                 stock_obj.outflows.append(flow_obj)
             else:
+                logger.error(f"Invalid direction '{direction}' for flow connection. Must be 'inflow' or 'outflow'.")
                 raise ValueError(f"Invalid direction '{direction}' for flow connection. Must be 'inflow' or 'outflow'.")
 
     def _get_current_dynamic_state_for_history(self):

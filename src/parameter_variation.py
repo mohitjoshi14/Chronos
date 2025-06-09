@@ -15,6 +15,8 @@ os.makedirs('logs', exist_ok=True)
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 class ParameterVariation(BaseModel):
     scenario_description: str = Field(description="A brief, descriptive name or summary for this parameter variation scenario (e.g., 'Optimistic Productivity', 'High Investment Cost').")
     parameters: dict = Field(description="The dictionary of parameters for this specific variation. Only the 'value' of parameters should be changed, 'unit' must remain the same as the base model. Maintain the exact same parameter names as the base model.")
@@ -96,22 +98,22 @@ def generate_parameter_variations_with_llm(
         print(f"Error decoding JSON from LLM output: {e}")
         print(f"Problematic JSON string: {json_string[:500]}...")
         print("Raw LLM output causing error:\n", raw_llm_output)
-        logging.error(f"Error decoding JSON from LLM output: {e}\nProblematic JSON string: {json_string[:500]}...\nRaw LLM output: {raw_llm_output}", exc_info=e)
+        logger.error(f"Error decoding JSON from LLM output: {e}\nProblematic JSON string: {json_string[:500]}...\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
     except ValidationError as e:
         print(f"Pydantic validation error for LLM output: {e}")
         print("Raw LLM output causing error:\n", raw_llm_output)
-        logging.error(f"Pydantic validation error for LLM output: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
+        logger.error(f"Pydantic validation error for LLM output: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
     except ValueError as e:
         print(f"Content error in LLM output: {e}")
         print("Raw LLM output causing error:\n", raw_llm_output)
-        logging.error(f"Content error in LLM output: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
+        logger.error(f"Content error in LLM output: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
     except Exception as e:
         print(f"An unexpected error occurred during parameter variation generation: {e}")
         print("Raw LLM output causing error:\n", raw_llm_output)
-        logging.error(f"Unexpected error during parameter variation generation: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
+        logger.error(f"Unexpected error during parameter variation generation: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
 
 

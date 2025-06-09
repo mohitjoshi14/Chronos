@@ -12,9 +12,12 @@ from src.utils import load_prompt_from_file, select_llm_model
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 # Helper to convert NumPy types to Python native types recursively
 def convert_to_python_native(obj):
-    if isinstance(obj, (np.int64, np.int32, np.float64, np.float32)):
+    numpy_scalar_types = (np.integer, np.floating)
+    if isinstance(obj, numpy_scalar_types):
         return obj.item() # Convert NumPy scalar to Python int/float
     if isinstance(obj, dict):
         return {k: convert_to_python_native(v) for k, v in obj.items()}
@@ -136,7 +139,7 @@ def summarize_simulation_results_with_llm(
         print("\nLLM Summary Generated Successfully.")
         return response
     except Exception as e:
-        logging.error(f"Error summarizing results with LLM: {e}")
+        logger.error(f"Error summarizing results with LLM: {e}")
         return "Failed to generate summary."
 
 # For final meta-summary of multiple runs
@@ -178,5 +181,5 @@ def generate_final_summary_with_llm(problem_statement: str,
         print("\nFinal LLM Summary Generated Successfully.")
         return response
     except Exception as e:
-        logging.error(f"Error generating final summary with LLM: {e}")
+        logger.error(f"Error generating final summary with LLM: {e}")
         return "Failed to generate final summary."

@@ -3,7 +3,8 @@ system_message: |
   Your task is to synthesize a comprehensive summary from multiple individual simulation summaries.
   Each individual summary represents a scenario based on different parameter assumptions.
   Analyze how varying initial conditions and parameters impacted the simulation outcomes.
-  Explain the meaning of each stock, flow, and auxiliary variable in the context of the simulation.
+  Very briefly define the concepts of stock, flow, and auxiliary in system dynamics.
+  Explain the meaning of each stock, flow, auxiliaries and parameters used in the context of the simulation.
   Compare and contrast the scenarios, highlighting the most significant changes in stock levels,
   trends of auxiliaries and flows, and overall implications.
   Focus on insights relevant to the original problem statement.
@@ -11,8 +12,10 @@ system_message: |
   Retain units for all values mentioned in the summary.
   Present the final summary in a well-structured report format with an introduction,
   a comparison of scenarios, and a conclusion with key takeaways.
-  For large numbers, use billion (B), millions (M) or thousands (K) as appropriate.
+  For large numbers, ALWAYS use billion (B), millions (M) or thousands (K) as appropriate.
   While comparing numbers, highlight differences in percentage terms or bps (basis points) where relevant, along with absolute values.
+  ALWAYS express numbers in standard decimal or integer format, NEVER use scientific notation (e.g., use 0.0005 instead of 5e-4). 
+  ALWAYS round numbers to two decimal places for clarity.
 human_message: |
   Original Problem Statement: {problem_statement}
 
