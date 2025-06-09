@@ -169,6 +169,7 @@ class System:
 
             # Calculate Auxiliaries using the eval_context in multiple passes
             # This helps resolve dependencies where one auxiliary depends on another.
+            # TO IMPROVE: This is not a good logic and will need to be improved in future iterations.
             for _ in range(5): # Iterate 5 times to ensure dependencies are met in typical models
                 for aux_name, aux in self.auxiliaries.items():
                     aux.calculate_value(eval_context)
