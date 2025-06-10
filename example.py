@@ -4,10 +4,43 @@ from src.orchestrator import run_analysis
 # problem_description = """What is the impact of Coca-Cola doubling their price?"""
 # problem_description = """What is the impact of Trump trade tariffs on the World Economy?"""
 # problem_description = """What is the impact of climate change on global food security?"""
-problem_description = """What is the impact of AI on job displacement?"""
+# problem_description = """What is the impact of AI on job displacement?"""
+problem_description = """
+Core Question: How will the accelerating adoption of AI-powered automation and optimization technologies specifically within the Indian IT Services and Business Process Outsourcing (BPO) sector influence the net change in full-time equivalent (FTE) employment levels (considering both displacement and creation) for entry-level and mid-level roles over the period 2025-2040, and what are the most effective policy and industry-level interventions to achieve a stable or growing employment rate in this sector?
+
+Key Areas of Interest/Dynamics to Explore:
+
+AI Adoption Rate: Factors influencing the rate of AI adoption by IT and BPO companies (e.g., cost of AI, availability of skilled AI professionals, competitive pressure, regulatory environment).
+Job Displacement Mechanisms:
+Automation of repetitive tasks (e.g., data entry, customer support).
+Efficiency gains leading to reduced need for human intervention.
+Impact on specific job categories (e.g., IT support, call center agents, junior software developers).
+Job Creation Mechanisms:
+New roles created by AI (e.g., AI trainers, data scientists, AI ethicists, prompt engineers).
+Increased demand for services due to AI-driven productivity and cost reductions.
+Growth in complementary industries.
+Workforce Transformation & Skill Gap:
+Flow of workers between different skill levels/job types.
+Effectiveness of re-skilling and up-skilling programs (e.g., government initiatives, corporate training, individual learning).
+Time lags associated with skill acquisition.
+Economic & Policy Environment:
+Government policies (e.g., subsidies for training, unemployment benefits, labor laws, AI regulation).
+Investment in R&D and AI infrastructure.
+Overall economic growth in India.
+Industry-level strategic decisions (e.g., reskilling investment, organizational restructuring).
+Demand Dynamics:
+How AI impacts the demand for IT and BPO services.
+Potential for new service offerings enabled by AI.
+Desired Outcomes from the Model (Quantifiable Outputs):
+
+Projection of net FTE employment in the Indian IT/BPO sector (disaggregated by skill level/job type if feasible).
+Projections of average wages for different skill segments.
+Sensitivity of employment levels to different AI adoption rates.
+Effectiveness (in terms of employment impact) of various policy interventions (e.g., x percent increase in re-skilling budget, y percent tax incentive for AI-driven job creation).
+Identification of tipping points or critical thresholds in AI adoption."""
 
 # Number of variations (simulations) to generate for the problem statement
-number_of_scenarios = 2
+number_of_scenarios = 3
 
 # LLM config to be used at various stages of the analysis
 llm_config_1 = {
