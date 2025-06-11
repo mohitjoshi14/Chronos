@@ -3,7 +3,7 @@ import logging
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from src.utils import load_prompt_from_file, select_llm_model
+from utils import load_prompt_from_file, select_llm_model
 
 # Load environment variables (like GOOGLE_API_KEY)
 load_dotenv()

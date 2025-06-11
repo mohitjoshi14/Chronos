@@ -6,32 +6,6 @@ We use the power of advanced AI (Large Language Models, or LLMs) to build, simul
 
 Note: Currently the product is not production ready and can generate errors. Use at your own risk.
 
-## Table of Contents
-
-1.  [The Multiverse Unveiled: What is This Project?](https://www.google.com/search?q=%231-the-multiverse-unveiled-what-is-this-project)
-2.  [Understanding the Fabric of Reality: System Dynamics Basics](https://www.google.com/search?q=%232-understanding-the-fabric-of-reality-system-dynamics-basics)
-      * [Thinking Like a Sorcerer Supreme: System Thinking](https://www.google.com/search?q=%23thinking-like-a-sorcerer-supreme-system-thinking)
-      * [The Building Blocks of Your Reality: Stocks, Flows, and Auxiliaries](https://www.google.com/search?q=%23the-building-blocks-of-your-reality-stocks-flows-and-auxiliaries)
-      * [Casting Spells: How We Analyze Systems](https://www.google.com/search?q=%23casting-spells-how-we-analyze-systems)
-      * [Why Bother with Time Travel? The Benefits of System Dynamics](https://www.google.com/search?q=%23why-bother-with-time-travel-the-benefits-of-system-dynamics)
-3.  [Sorcerous Features](https://www.google.com/search?q=%233-sorcerous-features)
-4.  [Initiating the Mystical Arts: Getting Started](https://www.google.com/search?q=%234-initiating-the-mystical-arts-getting-started)
-      * [Ancient Texts Needed: Prerequisites](https://www.google.com/search?q=%23ancient-texts-needed-prerequisites)
-      * [Setting Up Your Sanctum: Installation](https://www.google.com/search?q=%23setting-up-your-sanctum-installation)
-      * [Attuning Your Orb: Environment Setup](https://www.google.com/search?q=%23attuning-your-orb-environment-setup)
-5.  [Casting Your First Simulation](https://www.google.com/search?q=%235-casting-your-first-simulation)
-      * [The Incantation: Running the Analysis](https://www.google.com/search?q=%23the-incantation-running-the-analysis)
-      * [The Problem Scroll: Input Problem Statement](https://www.google.com/search?q=%23the-problem-scroll-input-problem-statement)
-      * [Visions of the Future: Number of Parameter Variations](https://www.google.com/search?q=%23visions-of-the-future-number-of-parameter-variations)
-      * [Unveiling Destiny: Output](https://www.google.com/search?q=%23unveiling-destiny-output)
-6.  [The Grand Design: Project Structure](https://www.google.com/search?q=%236-the-grand-design-project-structure)
-7.  [The Core Artifacts: Key Components](https://www.google.com/search?q=%237-the-core-artifacts-key-components)
-8.  [Speaking to the Oracle: LLM Prompts and Customization](https://www.google.com/search?q=%238-speaking-to-the-oracle-llm-prompts-and-customization)
-9.  [Shielding from Chaos: Error Handling and Logging](https://www.google.com/search?q=%239-shielding-from-chaos-error-handling-and-logging)
-10. [Future Dimensions: Enhancements](https://www.google.com/search?q=%2310-future-dimensions-enhancements)
-11. [Joining the Mystic Arts: Contributing](https://www.google.com/search?q=%2311-joining-the-mystic-arts-contributing)
-12. [The Ancient One's Blessing: License](https://www.google.com/search?q=%2312-the-ancient-ones-blessing-license)
-
 -----
 
 ## 1\. The Multiverse Unveiled: What is This Project?
