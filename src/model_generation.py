@@ -22,20 +22,24 @@ class StockDefinition(BaseModel):
     name: str = Field(description="Unique name of the stock. Use CamelCase. Examples: 'FarmerCapital', 'DistributorProductInventory'.")
     initial_value: float = Field(description="Initial numerical value of the stock.")
     unit: str = Field(description="Unit of measurement for the stock. E.g., 'USD', 'units', 'customers'.")
+    description: str = Field(description="One-line natural language description of what this stock represents.")
 
 class ParameterDefinition(BaseModel):
     value: float = Field(description="Numerical value of the parameter.")
     unit: str = Field(description="Unit of measurement for the parameter. E.g., 'USD/unit', 'ratio', 'days'.")
+    description: str = Field(description="One-line natural language description of what this parameter represents.")
 
 class AuxiliaryDefinition(BaseModel):
     name: str = Field(description="Unique name of the auxiliary variable. Use CamelCase. Examples: 'EffectiveSellingPrice', 'DemandRate'.")
     formula: str = Field(description="Python expression as a string. Can reference stock names, other auxiliary names, or parameter names (using their 'value'). E.g., 'StockA * PARAM_B.value'.")
     unit: str = Field(description="Unit of measurement for the auxiliary. E.g., 'USD/unit', 'units/day', 'ratio'.")
+    description: str = Field(description="One-line natural language description of what this auxiliary represents.")
 
 class FlowDefinition(BaseModel):
     name: str = Field(description="Unique name of the flow. Use CamelCase. Examples: 'ProductProductionRate', 'CapitalTransferToDistributor'.")
     formula: str = Field(description="Python expression as a string. Can reference stock names, auxiliary names, or parameter names (using their 'value'). Must be non-negative, so use 'max(0, ...)' around the entire expression. E.g., 'max(0, ProductInventory * DemandFactor)'.")
     unit: str = Field(description="Unit of measurement for the flow. This should be 'stock_unit/time_unit'. E.g., 'units/day', 'USD/month'.")
+    description: str = Field(description="One-line natural language description of what this flow represents.")
 
 class FlowConnection(BaseModel):
     flow_name: str = Field(description="Name of the flow.")

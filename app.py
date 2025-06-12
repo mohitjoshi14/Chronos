@@ -9,7 +9,7 @@ from src.problem_statement_optimizer import optimize_problem_statement
 import asyncio
 
 # Number of variations (simulations) to generate for the problem statement
-number_of_scenarios = 3
+number_of_scenarios = 10
 
 # LLM config to be used at various stages of the analysis
 llm_config_1 = {
@@ -46,7 +46,8 @@ def analyze_problem(problem_description):
         llm_for_generating_scenarios=llm_config_1,
         llm_for_simulation_analysis=llm_config_2,
         llm_for_summarization=llm_config_3,
-        output_directory=output_directory
+        output_directory=output_directory,
+        verbose=True
     ))
     return final_summary, model_diagram
 

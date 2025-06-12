@@ -55,44 +55,55 @@ def summarize_simulation_results_with_llm(
             print("\n--- Initial State of Stocks and Parameters ---")
         for stock_name, value in initial_stock_state.items():
             unit = component_units.get(stock_name, "units")
+            desc = None
+            # Try to get description from model_parameters or stock definitions if available
+            if 'stock_descriptions' in model_parameters:
+                desc = model_parameters['stock_descriptions'].get(stock_name)
             if verbose:
-                print(f"  {stock_name}: {value:.2f} {unit}")
+                print(f"  {stock_name}: {value:.2f} {unit}" + (f" | {desc}" if desc else ""))
         if verbose:
             print("\n--- Initial Parameters ---")
         for param_name, param_details in model_parameters.items():
             value = param_details['value'] if isinstance(param_details, dict) and 'value' in param_details else param_details
             unit = param_details['unit'] if isinstance(param_details, dict) and 'unit' in param_details else "dimensionless"
+            desc = param_details.get('description', None) if isinstance(param_details, dict) else None
             if verbose:
-                print(f"  {param_name}: {value} {unit}")
+                print(f"  {param_name}: {value} {unit}" + (f" | {desc}" if desc else ""))
         if verbose:
             print("\n--- Final State of Stocks ---")
         for stock_name, value in final_stock_state.items():
             unit = component_units.get(stock_name, "units")
+            desc = None
+            if 'stock_descriptions' in model_parameters:
+                desc = model_parameters['stock_descriptions'].get(stock_name)
             if verbose:
-                print(f"  {stock_name}: {value:.2f} {unit}")
-        if verbose:
-            print("----------------------------------------------")
+                print(f"  {stock_name}: {value:.2f} {unit}" + (f" | {desc}" if desc else ""))
+            if verbose:
+                print("----------------------------------------------")
         # --- End Display ---
 
 
-        # Populate summary_data for LLM (ensuring native Python types and including units)
+        # Populate summary_data for LLM (ensuring native Python types and including units and descriptions)
         llm_parameters_with_units = {
             name: {
                 "value": convert_to_python_native(details['value']) if isinstance(details, dict) and 'value' in details else convert_to_python_native(details),
-                "unit": details['unit'] if isinstance(details, dict) and 'unit' in details else "dimensionless"
+                "unit": details['unit'] if isinstance(details, dict) and 'unit' in details else "dimensionless",
+                "description": details.get('description', '') if isinstance(details, dict) else ''
             } for name, details in model_parameters.items()
         }
 
         llm_initial_stock_state = {
             name: {
                 "value": convert_to_python_native(value),
-                "unit": component_units.get(name, "units")
+                "unit": component_units.get(name, "units"),
+                "description": model_parameters.get('stock_descriptions', {}).get(name, '')
             } for name, value in initial_stock_state.items()
         }
         llm_final_stock_state = {
             name: {
                 "value": convert_to_python_native(value),
-                "unit": component_units.get(name, "units")
+                "unit": component_units.get(name, "units"),
+                "description": model_parameters.get('stock_descriptions', {}).get(name, '')
             } for name, value in final_stock_state.items()
         }
 

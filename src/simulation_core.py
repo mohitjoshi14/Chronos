@@ -9,10 +9,11 @@ logger = logging.getLogger(__name__)
 
 class Stock:
     """Represents an accumulation in the system."""
-    def __init__(self, name: str, initial_value: float, unit: str):
+    def __init__(self, name: str, initial_value: float, unit: str, description: str = ""):
         self.name = name
         self.value = initial_value
         self.unit = unit
+        self.description = description
         self.inflows = []
         self.outflows = []
 
@@ -28,10 +29,11 @@ class Stock:
 
 class Flow:
     """Represents a rate of change, calculated from a string formula."""
-    def __init__(self, name: str, formula: str, unit: str):
+    def __init__(self, name: str, formula: str, unit: str, description: str = ""):
         self.name = name
         self.formula = formula
         self.unit = unit
+        self.description = description
         self.rate = 0.0
 
     def calculate_rate(self, system_state: dict):
@@ -52,10 +54,11 @@ class Flow:
 
 class Auxiliary:
     """Represents a variable that influences flows, calculated from a string formula."""
-    def __init__(self, name: str, formula: str, unit: str):
+    def __init__(self, name: str, formula: str, unit: str, description: str = ""):
         self.name = name
         self.formula = formula
         self.unit = unit
+        self.description = description
         self.value = 0.0
 
     def calculate_value(self, system_state: dict):
@@ -107,15 +110,15 @@ class System:
 
         # Initialize Stocks
         stocks_config = model_config.get('stocks', [])
-        self.stocks = {s['name']: Stock(s['name'], s['initial_value'], s['unit']) for s in stocks_config}
+        self.stocks = {s['name']: Stock(s['name'], s['initial_value'], s['unit'], s.get('description', '')) for s in stocks_config}
 
         # Initialize Auxiliaries
         auxiliaries_config = model_config.get('auxiliaries', [])
-        self.auxiliaries = {a['name']: Auxiliary(a['name'], a['formula'], a['unit']) for a in auxiliaries_config}
+        self.auxiliaries = {a['name']: Auxiliary(a['name'], a['formula'], a['unit'], a.get('description', '')) for a in auxiliaries_config}
 
         # Initialize Flows
         flows_config = model_config.get('flows', [])
-        self.flows = {f['name']: Flow(f['name'], f['formula'], f['unit']) for f in flows_config}
+        self.flows = {f['name']: Flow(f['name'], f['formula'], f['unit'], f.get('description', '')) for f in flows_config}
 
         # Establish Flow Connections to Stocks
         flow_connections_config = model_config.get('flow_connections', [])
