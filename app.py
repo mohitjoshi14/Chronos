@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from src.orchestrator import run_analysis
 from src.problem_statement_optimizer import optimize_problem_statement
+import asyncio
 
 # Number of variations (simulations) to generate for the problem statement
 number_of_scenarios = 3
@@ -38,7 +39,7 @@ llm_config_4 = {
 output_directory = 'analysis_results'
 
 def analyze_problem(problem_description):
-    final_summary, model_diagram = run_analysis(
+    final_summary, model_diagram = asyncio.run(run_analysis(
         problem_statement=problem_description,
         num_variations=number_of_scenarios,
         llm_for_generating_system_model=llm_config_1,
@@ -46,7 +47,7 @@ def analyze_problem(problem_description):
         llm_for_simulation_analysis=llm_config_2,
         llm_for_summarization=llm_config_3,
         output_directory=output_directory
-    )
+    ))
     return final_summary, model_diagram
 
 with gr.Blocks(title="Chronos - Simulation Tool") as demo:

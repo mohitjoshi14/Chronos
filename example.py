@@ -1,4 +1,5 @@
 from src.orchestrator import run_analysis
+import asyncio
 
 # Problem statement that you want to analyze
 # problem_description = """What is the impact of Coca-Cola doubling their price?"""
@@ -34,7 +35,7 @@ llm_config_3 = {
 output_directory = 'analysis_results'
 
 # Run the analysis with the specified parameters
-run_analysis(
+asyncio.run(run_analysis(
     problem_statement=problem_description,
     num_variations=number_of_scenarios,
     llm_for_generating_system_model=llm_config_1,
@@ -42,4 +43,4 @@ run_analysis(
     llm_for_simulation_analysis=llm_config_2,
     llm_for_summarization=llm_config_3,
     output_directory=output_directory
-)
+))

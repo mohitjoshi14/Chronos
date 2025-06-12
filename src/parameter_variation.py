@@ -28,7 +28,8 @@ def generate_parameter_variations_with_llm(
     base_model_config: dict,
     num_variations: int,
     problem_statement: str,
-    llm_for_generating_scenarios: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.5}
+    llm_for_generating_scenarios: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.5},
+    verbose: bool = False
 ) -> list[ParameterVariation]: # Updated return type hint for clarity
     """
     Uses an LLM to generate multiple logical variations of model parameters.
@@ -69,7 +70,8 @@ def generate_parameter_variations_with_llm(
 
     chain = prompt_template | llm | raw_json_parser
 
-    print(f"\nGenerating {num_variations} parameter variations with LLM... This might take a moment.")
+    if verbose:
+        print(f"\nGenerating {num_variations} parameter variations with LLM... This might take a moment.")
     raw_llm_output = ""
     try:
         raw_llm_output = chain.invoke({
@@ -78,8 +80,8 @@ def generate_parameter_variations_with_llm(
             "num_variations": num_variations,
             "example_output_string": example_json_output
         })
-        print("\nRaw LLM Output for Parameter Variations (for debugging):\n", raw_llm_output)
-
+        if verbose:
+            print("\nRaw LLM Output for Parameter Variations (for debugging):\n", raw_llm_output)
         json_start = raw_llm_output.find('{')
         json_end = raw_llm_output.rfind('}') + 1
 
@@ -92,27 +94,32 @@ def generate_parameter_variations_with_llm(
 
         validated_output = ParameterVariationsOutput.model_validate(parsed_data) # Changed .parse_obj() to .model_validate()
         
-        print("\nParameter Variations Generated Successfully.")
+        if verbose:
+            print("\nParameter Variations Generated Successfully.")
         return validated_output.variations
     except json.JSONDecodeError as e:
-        print(f"Error decoding JSON from LLM output: {e}")
-        print(f"Problematic JSON string: {json_string[:500]}...")
-        print("Raw LLM output causing error:\n", raw_llm_output)
+        if verbose:
+            print(f"Error decoding JSON from LLM output: {e}")
+            print(f"Problematic JSON string: {json_string[:500]}...")
+            print("Raw LLM output causing error:\n", raw_llm_output)
         logger.error(f"Error decoding JSON from LLM output: {e}\nProblematic JSON string: {json_string[:500]}...\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
     except ValidationError as e:
-        print(f"Pydantic validation error for LLM output: {e}")
-        print("Raw LLM output causing error:\n", raw_llm_output)
+        if verbose:
+            print(f"Pydantic validation error for LLM output: {e}")
+            print("Raw LLM output causing error:\n", raw_llm_output)
         logger.error(f"Pydantic validation error for LLM output: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
     except ValueError as e:
-        print(f"Content error in LLM output: {e}")
-        print("Raw LLM output causing error:\n", raw_llm_output)
+        if verbose:
+            print(f"Content error in LLM output: {e}")
+            print("Raw LLM output causing error:\n", raw_llm_output)
         logger.error(f"Content error in LLM output: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
     except Exception as e:
-        print(f"An unexpected error occurred during parameter variation generation: {e}")
-        print("Raw LLM output causing error:\n", raw_llm_output)
+        if verbose:
+            print(f"An unexpected error occurred during parameter variation generation: {e}")
+            print("Raw LLM output causing error:\n", raw_llm_output)
         logger.error(f"Unexpected error during parameter variation generation: {e}\nRaw LLM output: {raw_llm_output}", exc_info=e)
         return []
 

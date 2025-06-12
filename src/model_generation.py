@@ -61,7 +61,8 @@ class ModelConfig(BaseModel):
 
 
 def generate_model_config_with_llm(problem_statement: str,
-                                   llm_for_generating_system_model: dict) -> Optional[dict]:
+                                   llm_for_generating_system_model: dict,
+                                   verbose: bool = False) -> Optional[dict]:
     """
     Generates a model configuration using an LLM based on the provided problem statement.
     """
@@ -84,12 +85,15 @@ def generate_model_config_with_llm(problem_statement: str,
 
     chain = prompt_template | llm | parser
 
-    print("Generating model configuration with LLM... This might take a moment.")
+    if verbose:
+        print("Generating model configuration with LLM... This might take a moment.")
     try:
         response = chain.invoke({"problem_statement": problem_statement, "format_instructions": parser.get_format_instructions()})
-        print("\nLLM Model Configuration Generated Successfully.")
+        if verbose:
+            print("\nLLM Model Configuration Generated Successfully.")
         return response
     except Exception as e:
         logger.error(f"Error generating model config with LLM: {e}")
-        print(f"Error generating model config with LLM. Check logs/error.log for details.")
+        if verbose:
+            print(f"Error generating model config with LLM. Check logs/error.log for details.")
         return None

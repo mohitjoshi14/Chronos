@@ -32,7 +32,8 @@ def summarize_simulation_results_with_llm(
     stock_names: list,
     component_units: dict,
     time_unit: str,
-    llm_for_simulation_analysis: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.5}
+    llm_for_simulation_analysis: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.5},
+    verbose: bool = False
 ) -> str:
     """
     Uses an LLM (Gemini) to summarize the simulation results in natural language.
@@ -50,21 +51,27 @@ def summarize_simulation_results_with_llm(
         final_stock_state = {name: final_full_state[name] for name in stock_names if name in final_full_state}
 
         # --- Display Initial and Final States (for console output) ---
-        print("\n--- Initial State of Stocks and Parameters ---")
+        if verbose:
+            print("\n--- Initial State of Stocks and Parameters ---")
         for stock_name, value in initial_stock_state.items():
             unit = component_units.get(stock_name, "units")
-            print(f"  {stock_name}: {value:.2f} {unit}")
-        print("\n--- Initial Parameters ---")
+            if verbose:
+                print(f"  {stock_name}: {value:.2f} {unit}")
+        if verbose:
+            print("\n--- Initial Parameters ---")
         for param_name, param_details in model_parameters.items():
             value = param_details['value'] if isinstance(param_details, dict) and 'value' in param_details else param_details
             unit = param_details['unit'] if isinstance(param_details, dict) and 'unit' in param_details else "dimensionless"
-            print(f"  {param_name}: {value} {unit}")
-
-        print("\n--- Final State of Stocks ---")
+            if verbose:
+                print(f"  {param_name}: {value} {unit}")
+        if verbose:
+            print("\n--- Final State of Stocks ---")
         for stock_name, value in final_stock_state.items():
             unit = component_units.get(stock_name, "units")
-            print(f"  {stock_name}: {value:.2f} {unit}")
-        print("----------------------------------------------")
+            if verbose:
+                print(f"  {stock_name}: {value:.2f} {unit}")
+        if verbose:
+            print("----------------------------------------------")
         # --- End Display ---
 
 
@@ -133,10 +140,12 @@ def summarize_simulation_results_with_llm(
 
     chain = prompt_template | llm | StrOutputParser()
 
-    print("\nSummarizing simulation results with LLM...")
+    if verbose:
+        print("\nSummarizing simulation results with LLM...")
     try:
         response = chain.invoke({"problem_statement": problem_statement, "summary_data": json.dumps(summary_data, indent=2)})
-        print("\nLLM Summary Generated Successfully.")
+        if verbose:
+            print("\nLLM Summary Generated Successfully.")
         return response
     except Exception as e:
         logger.error(f"Error summarizing results with LLM: {e}")
@@ -145,7 +154,8 @@ def summarize_simulation_results_with_llm(
 # For final meta-summary of multiple runs
 def generate_final_summary_with_llm(problem_statement: str, 
                                     all_individual_summaries: list[dict],
-                                    llm_for_summarization: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.7}) -> str:
+                                    llm_for_summarization: dict = {'provider': 'google', 'model_name': 'gemini-2.0-flash', 'temperature': 0.7},
+                                    verbose: bool = False) -> str:
     """
     Uses an LLM (Gemini) to synthesize a final summary from multiple individual simulation summaries.
     """
@@ -175,10 +185,12 @@ def generate_final_summary_with_llm(problem_statement: str,
 
     chain = prompt_template | llm | parser
 
-    print("\nGenerating final comprehensive summary with LLM...")
+    if verbose:
+        print("\nGenerating final comprehensive summary with LLM...")
     try:
         response = chain.invoke({"problem_statement": problem_statement, "summaries_str": summaries_str})
-        print("\nFinal LLM Summary Generated Successfully.")
+        if verbose:
+            print("\nFinal LLM Summary Generated Successfully.")
         return response
     except Exception as e:
         logger.error(f"Error generating final summary with LLM: {e}")
