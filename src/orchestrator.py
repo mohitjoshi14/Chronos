@@ -12,6 +12,7 @@ from src.simulation_core import System
 from src.model_generation import generate_model_config_with_llm
 from src.analysis_and_summary import summarize_simulation_results_with_llm, generate_final_summary_with_llm
 from src.parameter_variation import generate_parameter_variations_with_llm
+from src.generate_diagrams import generate_model_diagram
 
 # Set up logging to file in logs directory
 os.makedirs('logs', exist_ok=True)
@@ -33,7 +34,7 @@ def run_analysis(
         llm_for_generating_scenarios: dict = {},
         llm_for_simulation_analysis: dict = {},
         llm_for_summarization: dict = {}
-    ) -> str:
+    ) -> tuple[str, str]:
     """
     Main function to orchestrate the entire process:
     1. Get problem statement from user.
@@ -89,6 +90,9 @@ def run_analysis(
             f.write("Failed to generate a valid base model configuration. Analysis stopped.\n")
             logging.error("Failed to generate a valid base model configuration.")
             return
+
+        # Get Mermaid diagram for the base model configuration
+        base_model_diagram = generate_model_diagram(base_model_config)
 
         print("Base Model Configuration Generated Successfully.")
         f.write("Base Model Configuration Generated Successfully.\n\n")
@@ -222,6 +226,10 @@ def run_analysis(
             print(final_summary)
             print("-------------------------------------------------------\n")
             z.write(final_summary + "\n\n")
+            # # Write the base model diagram to the final summary
+            # z.write("## Model Diagram\n\n")
+            # z.write(base_model_diagram)
+            # z.write("\n\n")
         elif num_variations == 1:
             print("\nOnly one scenario was run. No comparative summary generated.")
             z.write("Only one scenario was run, so no comparative summary was generated. The summary for the base case is provided above.\n\n")
@@ -231,4 +239,4 @@ def run_analysis(
 
     print(f"\nAnalysis complete. Detailed simulation results written to: {output_filename}")
     print(f"Final comprehensive analysis written to: {output_final_filename}")
-    return final_summary
+    return final_summary, base_model_diagram

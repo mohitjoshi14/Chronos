@@ -9,12 +9,13 @@ system_message: |
   Formulas can reference stock names, auxiliary names, or parameter names. The units must be consistent within formulas.
 
   **Specific Guidelines for Model Components:**
-  1.  **Stocks:** Identify all quantities that accumulate over time. Crucially, consider explicit stocks for *each stakeholder* mentioned or implied in the problem, including:
+  1.  **Stocks:** All quantities that accumulate over time. Crucially, consider explicit stocks for *each stakeholder* mentioned or implied in the problem, including:
       -   **Capital/Money:** E.g., 'CompanyCapital' (unit: 'USD'), 'CustomerCapital' (unit: 'USD'), 'FarmerCapital' (unit: 'USD'), 'DistributorCapital' (unit: 'USD').
       -   **Product/Resource Inventory:** E.g., 'ProductInWarehouse' (unit: 'units'), 'CustomerProductHolding' (unit: 'units'), 'FarmerProductInventory' (unit: 'kg'), 'DistributorProductInventory' (unit: 'units').
       -   **Other relevant accumulations:** E.g., 'CustomerBase' (unit: 'customers'), 'BrandLoyalty' (unit: 'rating').
+      -   **Stock must always be a quantity and never a rate or ratio.
       -   **Each stock MUST have an 'initial_value' and a 'unit'.**
-  2.  **Parameters:** Define constants like base prices, production costs, initial efficiencies, maximum capacities, or fixed ratios. Use `UPPER_CASE` names.
+  2.  **Parameters:** Constants like base prices, production costs, initial efficiencies, maximum capacities, or fixed ratios. Use `UPPER_CASE` names.
       -   **Each parameter MUST be an object with a 'value' and a 'unit'.** E.g., `"BASE_PRICE": {{"value": 10.0, "unit": "USD/unit"}}`.
       -   Examples: 'PRODUCTION_COST_PER_UNIT' (unit: 'USD/unit'), 'INITIAL_LOYALTY' (unit: 'ratio').
       -   **Formulas referencing parameters should look like:** `StockA * PARAM_B['value']`.
@@ -32,8 +33,13 @@ system_message: |
   5.  **Flow Connections:** Explicitly define every flow's effect on stocks (which stock it flows into or out of). A single flow might affect multiple stocks (e.g., a 'Sales' flow moves product out of inventory and money into capital).
   6.  **Simulation Settings:** 'end_time' and 'dt' must each be an object with a 'value' and a 'unit' (e.g., 'days', 'weeks').
       -   Example: `"end_time": {{"value": 100, "unit": "days"}}`
-
-  Provide initial values for stocks and parameters that make sense for the problem, and set realistic simulation settings. Focus on the core dynamics described in the problem statement.
+  
+  **IMPORTANT: Steps To Follow in Order:**
+    1. Identify all stocks and their initial values.
+    2. Define all flows, their formulas and their connections to stocks. CRITICAL: All Stocks MUST have at least one inflow or outflow defined.
+    3. Define all auxiliaries (required in flow formulas only) and their formulas. CRITICAL: All Auxiliaries MUST be referenced in the formulas for flows or other auxiliaries. Do not define any auxiliaries that is not used in formulas.
+    4. Define all parameters (required in flow or auxiliary formulas only) and their initial values. CRITICAL: All Parameters MUST be referenced in the formulas, either in auxiliaries or flows. Do not define any parameter that is not used in formulas.
+    5. Provide initial values for stocks and parameters that make sense for the problem, and set realistic simulation settings. Focus on the core dynamics described in the problem statement.
 
   {format_instructions}
 human_message: |

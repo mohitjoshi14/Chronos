@@ -38,7 +38,7 @@ llm_config_4 = {
 output_directory = 'analysis_results'
 
 def analyze_problem(problem_description):
-    final_summary = run_analysis(
+    final_summary, model_diagram = run_analysis(
         problem_statement=problem_description,
         num_variations=number_of_scenarios,
         llm_for_generating_system_model=llm_config_1,
@@ -47,19 +47,11 @@ def analyze_problem(problem_description):
         llm_for_summarization=llm_config_3,
         output_directory=output_directory
     )
-    return final_summary
+    return final_summary, model_diagram
 
 with gr.Blocks(title="Chronos - Simulation Tool") as demo:
     gr.HTML("""
     <style>
-    #output_md_box {
-        min-height: 180px;  /* Adjust as needed */
-        max-height: 400px;
-        overflow-y: auto;
-        border: 1px solid #ccc;
-        padding: 12px;
-        background: #f9f9f9;
-    }
     .magic-btn {
         display: flex;
         align-items: center;
@@ -86,7 +78,9 @@ with gr.Blocks(title="Chronos - Simulation Tool") as demo:
         problem_input = gr.Textbox(label="Enter Problem Description", lines=3)
         optimize_btn = gr.Button("\u2728 Optimize Problem Statement", elem_classes=["magic-btn"])  # Magic wand icon
     submit_btn = gr.Button("Submit", variant="primary")
+    mermaid_md = gr.Markdown(label="Diagram Preview", value=" ", visible=True, elem_id="mermaid_md_box")
     output_md = gr.Markdown(label="Analysis", value=" ", visible=True, elem_id="output_md_box")
+    
 
     # Optimize button logic: optimize input and update textbox in place
     def optimize_and_return(text):
@@ -120,15 +114,15 @@ with gr.Blocks(title="Chronos - Simulation Tool") as demo:
         inputs=None,
         outputs=[optimize_btn, submit_btn],
         queue=False
-    ).then(
-        fn=lambda: "\u23F3 Processing... Please wait.",
-        inputs=None,
-        outputs=output_md,
-        queue=False
+    # ).then(
+    #     fn=lambda: "\u23F3 Processing... Please wait.",
+    #     inputs=None,
+    #     outputs=None,
+    #     queue=False
     ).then(
         fn=analyze_problem,
         inputs=problem_input,
-        outputs=output_md,
+        outputs=[output_md, mermaid_md],
         queue=True
     ).then(
         fn=lambda: set_buttons_state(False),
@@ -136,6 +130,6 @@ with gr.Blocks(title="Chronos - Simulation Tool") as demo:
         outputs=[optimize_btn, submit_btn],
         queue=False
     )
-
+    
 if __name__ == "__main__":
     demo.launch()

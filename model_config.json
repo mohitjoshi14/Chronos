@@ -1,0 +1,112 @@
+{
+  "problem_description": "How to maximize saving on hotel booking through online sites in India",
+  "stocks": [
+    {
+      "name": "CustomerCapital",
+      "initial_value": 1000.0,
+      "unit": "USD"
+    },
+    {
+      "name": "CustomerHotelBookings",
+      "initial_value": 0.0,
+      "unit": "bookings"
+    },
+    {
+      "name": "CustomerInformation",
+      "initial_value": 0.0,
+      "unit": "bits"
+    }
+  ],
+  "parameters": {
+    "BASE_HOTEL_PRICE": {
+      "value": 100.0,
+      "unit": "USD/booking"
+    },
+    "DISCOUNT_RATE": {
+      "value": 0.1,
+      "unit": "ratio"
+    },
+    "INFORMATION_ACQUISITION_RATE": {
+      "value": 0.01,
+      "unit": "bits/day"
+    },
+    "PRICE_SENSITIVITY": {
+      "value": 0.05,
+      "unit": "bookings/USD"
+    },
+    "INITIAL_INFORMATION": {
+      "value": 10,
+      "unit": "bits"
+    },
+    "CAPITAL_ALLOCATION_RATE": {
+      "value": 0.1,
+      "unit": "ratio"
+    }
+  },
+  "auxiliaries": [
+    {
+      "name": "EffectiveHotelPrice",
+      "formula": "BASE_HOTEL_PRICE['value'] * (1 - DISCOUNT_RATE['value'])",
+      "unit": "USD/booking"
+    },
+    {
+      "name": "PerceivedValue",
+      "formula": "CustomerInformation / 10",
+      "unit": "value"
+    },
+    {
+      "name": "BookingDesire",
+      "formula": "PerceivedValue * PRICE_SENSITIVITY['value']",
+      "unit": "bookings/day"
+    },
+    {
+      "name": "CapitalAllocation",
+      "formula": "CustomerCapital * CAPITAL_ALLOCATION_RATE['value']",
+      "unit": "USD"
+    }
+  ],
+  "flows": [
+    {
+      "name": "HotelBookingRate",
+      "formula": "max(0, min(BookingDesire, CustomerCapital / EffectiveHotelPrice))",
+      "unit": "bookings/day"
+    },
+    {
+      "name": "InformationAcquisition",
+      "formula": "max(0, INFORMATION_ACQUISITION_RATE['value'])",
+      "unit": "bits/day"
+    },
+    {
+      "name": "CapitalSpentOnBooking",
+      "formula": "max(0, HotelBookingRate * EffectiveHotelPrice)",
+      "unit": "USD/day"
+    }
+  ],
+  "flow_connections": [
+    [
+      "HotelBookingRate",
+      "CustomerHotelBookings",
+      "inflow"
+    ],
+    [
+      "InformationAcquisition",
+      "CustomerInformation",
+      "inflow"
+    ],
+    [
+      "CapitalSpentOnBooking",
+      "CustomerCapital",
+      "outflow"
+    ]
+  ],
+  "simulation_settings": {
+    "end_time": {
+      "value": 365,
+      "unit": "days"
+    },
+    "dt": {
+      "value": 1,
+      "unit": "days"
+    }
+  }
+}

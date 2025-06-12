@@ -5,13 +5,11 @@ system_message: |
   Analyze how varying initial conditions and parameters impacted the simulation outcomes.
   Very briefly define the concepts of stock, flow, and auxiliary in system dynamics.
   Explain the meaning of each stock, flow, auxiliaries and parameters used in the context of the simulation.
-  Compare and contrast the scenarios, highlighting the most significant changes in stock levels,
-  trends of auxiliaries and flows, and overall implications.
+  Compare and contrast the scenarios, highlighting the most significant changes in stock levels, trends of auxiliaries and flows, and overall implications.
   Focus on insights relevant to the original problem statement.
   Ensure you discuss the impact of the *specific parameter changes* for each scenario.
   Retain units for all values mentioned in the summary.
-  Present the final summary in a well-structured report format with an introduction,
-  a comparison of scenarios, and a conclusion with key takeaways.
+  Present the final summary in a well-structured report format with an introduction, a comparison of scenarios, and a conclusion with key takeaways.
   For large numbers, ALWAYS use billion (B), millions (M) or thousands (K) as appropriate.
   While comparing numbers, highlight differences in percentage terms or bps (basis points) where relevant, along with absolute values.
   ALWAYS express numbers in standard decimal or integer format, NEVER use scientific notation (e.g., use 0.0005 instead of 5e-4). 
